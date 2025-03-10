@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import contactsRouter from './routes/contacts.js';
+import contactsRouter from '../routes/contact.js';
 import { getEnvVar } from './utils/getEnvVar.js';
 
 const PORT = getEnvVar('PORT', 3000);
@@ -11,7 +11,7 @@ export async function setupServer() {
 
   app.use(cors());
   app.use(express.json());
-  
+
   app.use(pino({
     transport: {
       target: 'pino-pretty',
