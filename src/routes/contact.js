@@ -1,22 +1,32 @@
-const express = require('express');
-const router = express.Router();
-const Contact = require('../models/contact');
+import express from 'express';
+import { getAllContacts } from '../services/getAllContacts.js';
+import { getContactById } from '../services/getContactById.js';
 
-router.get('/', async (res) => {
-  try {
-    const contacts = await Contact.find();
-    if (contacts.length === 0) {
-      return res.status(404).json({ message: 'No contacts found' });
-    }
-    res.json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
+const router = express.Router();
+
+router.get('/', async (req, res) => {
+  const contacts = await getAllContacts();
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully found contacts!',
+    data: contacts,
+  });
+});
+
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  const contact = await getContactById(id);
+  if (contact === null) {
+    res.status(404).json({
+      message: 'Contact not found',
     });
-  } catch (error) {
-    console.error('Error fetching contacts:', error);
-    res.status(500).json({ message: 'Server error' });
+  } else {
+    res.status(200).json({
+      status: 200,
+      message: `Successfully found contact with id ${id}!`,
+      data: contact,
+    });
   }
 });
 
-module.exports = router;
+export default router;
