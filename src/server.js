@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import contactsRouter from '../routes/contact.js';
+import contactsRouter from './routes/contact.js';
 import { getEnvVar } from './utils/getEnvVar.js';
 
 const PORT = getEnvVar('PORT', 3000);

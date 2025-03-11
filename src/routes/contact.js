@@ -1,7 +1,8 @@
+import express from 'express';
 import { getAllContacts } from '../services/getAllContacts.js';
 import { getContactById } from '../services/getContactById.js';
 
-const router = router();
+const router = express.Router();;
 
 router.get('/', async (req, res) => {
   const contacts = await getAllContacts();
