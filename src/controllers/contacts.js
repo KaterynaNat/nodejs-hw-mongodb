@@ -14,7 +14,7 @@ export const getAllContacts = async (req, res) => {
   const skip = (page - 1) * perPage;
   const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
 
-  const filter = {};
+  const filter = { userId: req.user._id };
   if (type) filter.contactType = type;
   if (isFavourite !== undefined) filter.isFavorite = isFavourite === 'true';
 
@@ -44,10 +44,12 @@ export const getAllContacts = async (req, res) => {
 
 export const getContactById = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await contactService.getContactById(contactId);
+  const contact = await contactService.getContactById(contactId, req.user._id);
+
   if (!contact) {
     throw createError(404, 'Contact not found');
   }
+
   res.status(200).json({
     status: 200,
     message: `Successfully found contact with id ${contactId}!`,
@@ -56,7 +58,11 @@ export const getContactById = async (req, res) => {
 };
 
 export const addContact = async (req, res) => {
-  const newContact = await contactService.addContact(req.body);
+  const newContact = await contactService.addContact({
+    ...req.body,
+    userId: req.user._id,
+  });
+
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
@@ -68,11 +74,14 @@ export const updateContact = async (req, res) => {
   const { contactId } = req.params;
   const updatedContact = await contactService.updateContact(
     contactId,
+    req.user._id,
     req.body,
   );
+
   if (!updatedContact) {
     throw createError(404, 'Contact not found');
   }
+
   res.status(200).json({
     status: 200,
     message: 'Successfully patched a contact!',
@@ -82,9 +91,11 @@ export const updateContact = async (req, res) => {
 
 export const deleteContact = async (req, res) => {
   const { contactId } = req.params;
-  const deleted = await contactService.deleteContact(contactId);
+  const deleted = await contactService.deleteContact(contactId, req.user._id);
+
   if (!deleted) {
     throw createError(404, 'Contact not found');
   }
+
   res.status(204).send();
 };
