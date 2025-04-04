@@ -3,12 +3,15 @@ import ctrlWrapper from '../utils/ctrlWrapper.js';
 import * as contactsCtrl from '../controllers/contacts.js';
 import validateBody from '../middlewares/validateBody.js';
 import isValidId from '../middlewares/isValidId.js';
+import authenticate from '../middlewares/authenticate.js';
 import {
   createContactSchema,
   updateContactSchema,
 } from '../schemas/contactSchemas.js';
 
 const router = express.Router();
+
+router.use(authenticate);
 
 router.get('/', ctrlWrapper(contactsCtrl.getAllContacts));
 router.get('/:contactId', isValidId, ctrlWrapper(contactsCtrl.getContactById));
