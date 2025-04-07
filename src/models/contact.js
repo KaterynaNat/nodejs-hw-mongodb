@@ -6,6 +6,7 @@ const contactSchema = new mongoose.Schema(
     phoneNumber: { type: String, required: true },
     email: { type: String },
     isFavorite: { type: Boolean, default: false },
+    photo: { type: String },
     contactType: {
       type: String,
       required: true,

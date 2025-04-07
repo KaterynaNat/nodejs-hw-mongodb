@@ -1,5 +1,7 @@
 import createError from 'http-errors';
 import * as contactService from '../services/contacts.js';
+import cloudinary from '../utils/cloudinary.js';
+import { Readable } from 'stream';
 
 export const getAllContacts = async (req, res) => {
   const {
@@ -57,10 +59,33 @@ export const getContactById = async (req, res) => {
   });
 };
 
+function bufferToStream(buffer) {
+  const readable = new Readable();
+  readable.push(buffer);
+  readable.push(null);
+  return readable;
+}
+
 export const addContact = async (req, res) => {
+  let photoUrl;
+  if (req.file) {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'contacts' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+      bufferToStream(req.file.buffer).pipe(uploadStream);
+    });
+    photoUrl = result.secure_url;
+  }
+
   const newContact = await contactService.addContact({
     ...req.body,
     userId: req.user._id,
+    photo: photoUrl,
   });
 
   res.status(201).json({
