@@ -97,10 +97,34 @@ export const addContact = async (req, res) => {
 
 export const updateContact = async (req, res) => {
   const { contactId } = req.params;
+
+  let photoUrl;
+  if (req.file) {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'contacts' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+      bufferToStream(req.file.buffer).pipe(uploadStream);
+    });
+    photoUrl = result.secure_url;
+  }
+
+  const updateData = {
+    ...req.body,
+  };
+
+  if (photoUrl) {
+    updateData.photo = photoUrl;
+  }
+
   const updatedContact = await contactService.updateContact(
     contactId,
     req.user._id,
-    req.body,
+    updateData,
   );
 
   if (!updatedContact) {
