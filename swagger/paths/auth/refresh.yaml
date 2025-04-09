@@ -1,0 +1,10 @@
+post:
+  tags:
+    - Auth
+  summary: Оновлення access token за refresh token
+  operationId: refresh
+  responses:
+    '200':
+      description: Новий access token
+    '401':
+      description: Недійсний або прострочений refresh token

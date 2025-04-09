@@ -1,0 +1,37 @@
+get:
+  tags:
+    - Contacts
+  summary: Отримати список контактів
+  operationId: getContacts
+  description: Повертає всі контакти з можливістю фільтрації, сортування та пагінації
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: page
+      in: query
+      schema:
+        type: integer
+    - name: perPage
+      in: query
+      schema:
+        type: integer
+    - name: sortBy
+      in: query
+      schema:
+        type: string
+    - name: sortOrder
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+    - name: type
+      in: query
+      schema:
+        type: string
+    - name: isFavourite
+      in: query
+      schema:
+        type: boolean
+  responses:
+    '200':
+      description: Успішна відповідь

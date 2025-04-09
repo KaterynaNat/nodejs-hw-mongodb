@@ -1,0 +1,19 @@
+get:
+  tags:
+    - Contacts
+  summary: Отримати контакт за ID
+  operationId: getContactById
+  description: Повертає контакт за переданим ID
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: contactId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Контакт знайдено
+    '404':
+      description: Контакт не знайдено

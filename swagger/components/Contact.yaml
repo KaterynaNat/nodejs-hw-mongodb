@@ -1,0 +1,55 @@
+schemas:
+  Contact:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      isFavorite:
+        type: boolean
+      photo:
+        type: string
+      contactType:
+        type: string
+        enum: [work, home, personal]
+      userId:
+        type: string
+
+  CreateContactInput:
+    type: object
+    required:
+      - name
+      - phoneNumber
+      - contactType
+    properties:
+      name:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      isFavorite:
+        type: boolean
+      contactType:
+        type: string
+        enum: [work, home, personal]
+
+  UpdateContactInput:
+    type: object
+    properties:
+      name:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      isFavorite:
+        type: boolean
+      contactType:
+        type: string
+        enum: [work, home, personal]

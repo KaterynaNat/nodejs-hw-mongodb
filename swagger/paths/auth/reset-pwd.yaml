@@ -1,0 +1,18 @@
+post:
+  tags:
+    - Auth
+  summary: Скидання пароля
+  operationId: resetPassword
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/Auth.yaml#/schemas/ResetPwdInput
+  responses:
+    '200':
+      description: Пароль скинуто успішно
+    '401':
+      description: Токен недійсний або прострочений
+    '404':
+      description: Користувача не знайдено
