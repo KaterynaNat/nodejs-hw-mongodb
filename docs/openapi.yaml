@@ -6,11 +6,11 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: Documentation for a contacts app
+
 tags:
   - name: Contacts
     description: Operations about contacts.
-  - name: Auth
-    description: User authentication
+
 servers:
   - url: https://swagger-orjw.onrender.com
   - url: http://localhost:3000
