@@ -1,24 +1,37 @@
 schemas:
   Contact:
     type: object
+    required:
+      - _id
+      - name
+      - phoneNumber
+      - contactType
+      - userId
     properties:
       _id:
         type: string
+        example: 65e4decdd286b30065d54af9
       name:
         type: string
+        example: John Doe
       phoneNumber:
         type: string
+        example: +380764567373
       email:
         type: string
-      isFavorite:
+        example: john_doe@mail.com
+      isFavourite:
         type: boolean
-      photo:
-        type: string
+        example: true
       contactType:
         type: string
         enum: [work, home, personal]
       userId:
         type: string
+        example: 65e4decdd286b30065d54af9
+      photo:
+        type: string
+        example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
 
   CreateContactInput:
     type: object
@@ -29,15 +42,22 @@ schemas:
     properties:
       name:
         type: string
+        example: John Doe
       phoneNumber:
         type: string
+        example: +380764567373
       email:
         type: string
-      isFavorite:
+        example: john_doe@mail.com
+      isFavourite:
         type: boolean
+        example: false
       contactType:
         type: string
         enum: [work, home, personal]
+      photo:
+        type: string
+        format: binary
 
   UpdateContactInput:
     type: object
@@ -48,8 +68,11 @@ schemas:
         type: string
       email:
         type: string
-      isFavorite:
+      isFavourite:
         type: boolean
       contactType:
         type: string
         enum: [work, home, personal]
+      photo:
+        type: string
+        format: binary

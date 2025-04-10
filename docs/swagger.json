@@ -2,384 +2,686 @@
   "openapi": "3.1.0",
   "info": {
     "version": "1.0.0",
-    "title": "Contacts API",
+    "title": "Contact App",
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "API для керування контактами (створення, редагування, видалення, отримання).\n"
+    "description": "Documentation for a contacts app"
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "https://swagger-orjw.onrender.com"
     },
     {
-      "url": "https://<твоє-посилання-на-render>"
+      "url": "http://localhost:3000"
     }
   ],
   "tags": [
     {
       "name": "Contacts",
-      "description": "Все про контакти"
+      "description": "Operations about contacts."
     },
     {
       "name": "Auth",
-      "description": "Авторизація користувача"
+      "description": "User authentication"
     }
   ],
   "paths": {
     "/contacts": {
       "get": {
-        "get": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Отримати список контактів",
-          "operationId": "getContacts",
-          "description": "Повертає всі контакти з можливістю фільтрації, сортування та пагінації",
-          "security": [
-            {
-              "bearerAuth": []
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get list of contacts",
+        "operationId": "getContacts",
+        "description": "Get list of contacts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 10
             }
-          ],
-          "parameters": [
-            {
-              "name": "page",
-              "in": "query",
-              "schema": {
-                "type": "integer"
-              }
-            },
-            {
-              "name": "perPage",
-              "in": "query",
-              "schema": {
-                "type": "integer"
-              }
-            },
-            {
-              "name": "sortBy",
-              "in": "query",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "sortOrder",
-              "in": "query",
-              "schema": {
-                "type": "string",
-                "enum": [
-                  "asc",
-                  "desc"
-                ]
-              }
-            },
-            {
-              "name": "type",
-              "in": "query",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "name": "isFavourite",
-              "in": "query",
-              "schema": {
-                "type": "boolean"
-              }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "contactType",
+              "description": "_id, name, contactType, createdAt fields can be mentioned. Default value - _id"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успішна відповідь"
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "contactType",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "work",
+                "home",
+                "personal"
+              ],
+              "example": "personal",
+              "description": "filter by contactType value"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isFavourite",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "example": "true",
+              "description": "filter favourite contacts"
             }
           }
-        }
-      },
-      "post": {
-        "post": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Створити новий контакт",
-          "operationId": "createContact",
-          "description": "Додає новий контакт",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "requestBody": {
-            "required": true,
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all contacts",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "../../components/Contact.yaml#/schemas/CreateContactInput"
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contacts!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/contact"
+                          }
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 10
+                        },
+                        "totalItems": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "totalPages": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           },
-          "responses": {
-            "201": {
-              "description": "Контакт створено успішно"
-            }
-          }
-        }
-      }
-    },
-    "/contacts/{contactId}": {
-      "get": {
-        "get": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Отримати контакт за ID",
-          "operationId": "getContactById",
-          "description": "Повертає контакт за переданим ID",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "contactId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Контакт знайдено"
-            },
-            "404": {
-              "description": "Контакт не знайдено"
-            }
-          }
-        }
-      },
-      "patch": {
-        "patch": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Оновити контакт",
-          "operationId": "updateContact",
-          "description": "Часткове оновлення контакту",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "contactId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "../../components/Contact.yaml#/schemas/UpdateContactInput"
-                }
-              }
-            }
+          "401": {
+            "$ref": "#/components/responses/401"
           },
-          "responses": {
-            "200": {
-              "description": "Контакт оновлено"
-            },
-            "404": {
-              "description": "Контакт не знайдено"
-            }
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       },
-      "delete": {
-        "delete": {
-          "tags": [
-            "Contacts"
-          ],
-          "summary": "Видалити контакт",
-          "operationId": "deleteContact",
-          "description": "Видаляє контакт за ID",
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "contactId",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "Контакт видалено"
-            },
-            "404": {
-              "description": "Контакт не знайдено"
-            }
-          }
-        }
-      }
-    },
-    "/auth/register": {
       "post": {
         "tags": [
-          "Auth"
+          "Contacts"
         ],
-        "summary": "Реєстрація користувача",
-        "operationId": "register",
+        "summary": "Create contact",
+        "operationId": "createContact",
+        "description": "Create contact",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
-          "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterInput"
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber",
+                  "contactType"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "Contact's name",
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "description": "Contact's phone number",
+                    "type": "string",
+                    "example": 380764567373
+                  },
+                  "email": {
+                    "description": "Contact's email",
+                    "type": "string",
+                    "example": "john_doe@mail.com"
+                  },
+                  "isFavourite": {
+                    "description": "Favourite contact",
+                    "type": "boolean",
+                    "example": true,
+                    "default": false
+                  },
+                  "contactType": {
+                    "description": "Type of contact",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ]
+                  },
+                  "photo": {
+                    "description": "Link to contact's photo",
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Успішна реєстрація"
+            "description": "Created a contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created a contact"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
           },
-          "409": {
-            "description": "Email вже використовується"
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "BadRequestError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message",
+                        "errors"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "message",
+                              "path",
+                              "type",
+                              "context"
+                            ],
+                            "properties": {
+                              "message": {
+                                "type": "string",
+                                "example": "\"phoneNumber\" is required"
+                              },
+                              "path": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "example": [
+                                  "phoneNumber"
+                                ]
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "any.required"
+                              },
+                              "context": {
+                                "type": "object",
+                                "required": [
+                                  "label",
+                                  "key"
+                                ],
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "example": "phoneNumber"
+                                  },
+                                  "key": {
+                                    "type": "string",
+                                    "example": "phoneNumber"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       }
     },
-    "/auth/login": {
-      "post": {
+    "/contacts/{contactId}": {
+      "get": {
         "tags": [
-          "Auth"
+          "Contacts"
         ],
-        "summary": "Логін користувача",
-        "operationId": "login",
+        "summary": "Get contact by id",
+        "operationId": "getContact",
+        "description": "Get contact by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get contact by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contact with id 65ca67e7ae7f10c88b598384!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Patch contact",
+        "operationId": "patchContact",
+        "description": "Patch contact",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
         "requestBody": {
-          "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/LoginInput"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Contact's name",
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "description": "Contact's phone number",
+                    "type": "string",
+                    "example": 380764567373
+                  },
+                  "email": {
+                    "description": "Contact's email",
+                    "type": "string",
+                    "example": "john_doe@mail.com"
+                  },
+                  "isFavourite": {
+                    "description": "Favourite contact",
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "contactType": {
+                    "description": "Type of contact",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ]
+                  },
+                  "photo": {
+                    "description": "Link to contact's photo",
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Успішна авторизація"
+            "description": "Patched a contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully patched a contact!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "BadRequestError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message",
+                        "errors"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "message",
+                              "path",
+                              "type",
+                              "context"
+                            ],
+                            "properties": {
+                              "message": {
+                                "type": "string",
+                                "example": "\"phoneNumber\" is required"
+                              },
+                              "path": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "example": [
+                                  "phoneNumber"
+                                ]
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "any.required"
+                              },
+                              "context": {
+                                "type": "object",
+                                "required": [
+                                  "label",
+                                  "key"
+                                ],
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "example": "phoneNumber"
+                                  },
+                                  "key": {
+                                    "type": "string",
+                                    "example": "phoneNumber"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
-            "description": "Невірна пошта або пароль"
-          }
-        }
-      }
-    },
-    "/auth/refresh": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Оновлення access token за refresh token",
-        "operationId": "refresh",
-        "responses": {
-          "200": {
-            "description": "Новий access token"
+            "$ref": "#/components/responses/401"
           },
-          "401": {
-            "description": "Недійсний або прострочений refresh token"
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
-      }
-    },
-    "/auth/logout": {
-      "post": {
+      },
+      "delete": {
         "tags": [
-          "Auth"
+          "Contacts"
         ],
-        "summary": "Вихід з системи (logout)",
-        "operationId": "logout",
+        "summary": "Delete contact by id",
+        "operationId": "deleteContact",
+        "description": "Delete contact by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
         "responses": {
           "204": {
-            "description": "Сесія завершена"
-          },
-          "401": {
-            "description": "Токен відсутній або недійсний"
-          }
-        }
-      }
-    },
-    "/auth/send-reset-email": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Надіслати лист для скидання пароля",
-        "operationId": "sendResetEmail",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetEmailInput"
+            "description": "Successfully deleted contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 204
+                    }
+                  }
+                }
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Лист успішно надіслано"
-          },
-          "404": {
-            "description": "Користувача не знайдено"
-          }
-        }
-      }
-    },
-    "/auth/reset-pwd": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Скидання пароля",
-        "operationId": "resetPassword",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetPwdInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Пароль скинуто успішно"
           },
           "401": {
-            "description": "Токен недійсний або прострочений"
+            "$ref": "#/components/responses/401"
           },
           "404": {
-            "description": "Користувача не знайдено"
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       }
@@ -394,159 +696,222 @@
     },
     "schemas": {
       "Contact": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string"
+        "$ref": "#/components/schemas/contact"
+      },
+      "contact": {
+        "schemas": {
+          "Contact": {
+            "type": "object",
+            "required": [
+              "_id",
+              "name",
+              "phoneNumber",
+              "contactType",
+              "userId"
+            ],
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "65e4decdd286b30065d54af9"
+              },
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "phoneNumber": {
+                "type": "string",
+                "example": 380764567373
+              },
+              "email": {
+                "type": "string",
+                "example": "john_doe@mail.com"
+              },
+              "isFavourite": {
+                "type": "boolean",
+                "example": true
+              },
+              "contactType": {
+                "type": "string",
+                "enum": [
+                  "work",
+                  "home",
+                  "personal"
+                ]
+              },
+              "userId": {
+                "type": "string",
+                "example": "65e4decdd286b30065d54af9"
+              },
+              "photo": {
+                "type": "string",
+                "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
+              }
+            }
           },
-          "name": {
-            "type": "string"
+          "CreateContactInput": {
+            "type": "object",
+            "required": [
+              "name",
+              "phoneNumber",
+              "contactType"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "phoneNumber": {
+                "type": "string",
+                "example": 380764567373
+              },
+              "email": {
+                "type": "string",
+                "example": "john_doe@mail.com"
+              },
+              "isFavourite": {
+                "type": "boolean",
+                "example": false
+              },
+              "contactType": {
+                "type": "string",
+                "enum": [
+                  "work",
+                  "home",
+                  "personal"
+                ]
+              },
+              "photo": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
           },
-          "phoneNumber": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "isFavorite": {
-            "type": "boolean"
-          },
-          "photo": {
-            "type": "string"
-          },
-          "contactType": {
-            "type": "string",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ]
-          },
-          "userId": {
-            "type": "string"
+          "UpdateContactInput": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "phoneNumber": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "isFavourite": {
+                "type": "boolean"
+              },
+              "contactType": {
+                "type": "string",
+                "enum": [
+                  "work",
+                  "home",
+                  "personal"
+                ]
+              },
+              "photo": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "401": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access token expired"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
-      "CreateContactInput": {
-        "type": "object",
-        "required": [
-          "name",
-          "phoneNumber",
-          "contactType"
-        ],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "phoneNumber": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "isFavorite": {
-            "type": "boolean"
-          },
-          "contactType": {
-            "type": "string",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ]
+      "404": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Contact not found"
+                }
+              }
+            }
           }
         }
       },
-      "UpdateContactInput": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "phoneNumber": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "isFavorite": {
-            "type": "boolean"
-          },
-          "contactType": {
-            "type": "string",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ]
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal Server Error"
+                }
+              }
+            }
           }
         }
       },
-      "RegisterInput": {
-        "type": "object",
-        "required": [
-          "name",
-          "email",
-          "password"
-        ],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "format": "password"
-          }
-        }
+      "UnauthorizedError": {
+        "$ref": "#/components/responses/401"
       },
-      "LoginInput": {
-        "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "format": "password"
-          }
-        }
+      "NotFoundError": {
+        "$ref": "#/components/responses/404"
       },
-      "ResetEmailInput": {
-        "type": "object",
-        "required": [
-          "email"
-        ],
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          }
-        }
-      },
-      "ResetPwdInput": {
-        "type": "object",
-        "required": [
-          "token",
-          "password"
-        ],
-        "properties": {
-          "token": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string",
-            "format": "password"
-          }
-        }
+      "ServerError": {
+        "$ref": "#/components/responses/500"
       }
     }
   }
