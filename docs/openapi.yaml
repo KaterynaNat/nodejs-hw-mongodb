@@ -39,13 +39,13 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-  schemas:
-    Contact:
-      $ref: ../swagger/components/schemas/contact.yaml
-  responses:
-    UnauthorizedError:
-      $ref: ../swagger/components/responses/401.yaml
-    NotFoundError:
-      $ref: ../swagger/components/responses/404.yaml
-    ServerError:
-      $ref: ../swagger/components/responses/500.yaml
+  # schemas:
+  #   Contact:
+  #     $ref: ../swagger/components/schemas/contact.yaml
+  # responses:
+  #   UnauthorizedError:
+  #     $ref: ../swagger/components/responses/401.yaml
+  #   NotFoundError:
+  #     $ref: ../swagger/components/responses/404.yaml
+  #   ServerError:
+  #     $ref: ../swagger/components/responses/500.yaml
