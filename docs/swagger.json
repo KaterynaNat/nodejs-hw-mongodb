@@ -766,9 +766,6 @@
       }
     },
     "schemas": {
-      "Contact": {
-        "$ref": "#/components/schemas/contact"
-      },
       "contact": {
         "type": "object",
         "required": [
@@ -903,15 +900,6 @@
             }
           }
         }
-      },
-      "UnauthorizedError": {
-        "$ref": "#/components/responses/401"
-      },
-      "NotFoundError": {
-        "$ref": "#/components/responses/404"
-      },
-      "ServerError": {
-        "$ref": "#/components/responses/500"
       }
     }
   }
