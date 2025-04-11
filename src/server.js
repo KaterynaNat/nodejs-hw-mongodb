@@ -7,7 +7,6 @@ import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
 import yaml from 'yaml';
-import swaggerUi from 'swagger-ui-express';
 
 import contactsRouter from './routers/contacts.js';
 import authRouter from './routers/auth.js';
@@ -21,8 +20,8 @@ export function setupServer() {
 
   // Swagger
   const swaggerFile = fs.readFileSync('./docs/openapi.yaml', 'utf8');
-  const swaggerDocument = yaml.parse(swaggerFile);
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  const swaggerDocs = yaml.parse(swaggerFile);
+  app.use('/api-docs', swaggerDocs());
 
   // Middlewares
   app.use(cors());
