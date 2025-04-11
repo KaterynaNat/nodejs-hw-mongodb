@@ -770,121 +770,50 @@
         "$ref": "#/components/schemas/contact"
       },
       "contact": {
-        "schemas": {
-          "Contact": {
-            "type": "object",
-            "required": [
-              "_id",
-              "name",
-              "phoneNumber",
-              "contactType",
-              "userId"
-            ],
-            "properties": {
-              "_id": {
-                "type": "string",
-                "example": "65e4decdd286b30065d54af9"
-              },
-              "name": {
-                "type": "string",
-                "example": "John Doe"
-              },
-              "phoneNumber": {
-                "type": "string",
-                "example": 380764567373
-              },
-              "email": {
-                "type": "string",
-                "example": "john_doe@mail.com"
-              },
-              "isFavourite": {
-                "type": "boolean",
-                "example": true
-              },
-              "contactType": {
-                "type": "string",
-                "enum": [
-                  "work",
-                  "home",
-                  "personal"
-                ]
-              },
-              "userId": {
-                "type": "string",
-                "example": "65e4decdd286b30065d54af9"
-              },
-              "photo": {
-                "type": "string",
-                "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
-              }
-            }
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "phoneNumber",
+          "contactType",
+          "userId"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "65e4decdd286b30065d54af9"
           },
-          "CreateContactInput": {
-            "type": "object",
-            "required": [
-              "name",
-              "phoneNumber",
-              "contactType"
-            ],
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": "John Doe"
-              },
-              "phoneNumber": {
-                "type": "string",
-                "example": 380764567373
-              },
-              "email": {
-                "type": "string",
-                "example": "john_doe@mail.com"
-              },
-              "isFavourite": {
-                "type": "boolean",
-                "example": false
-              },
-              "contactType": {
-                "type": "string",
-                "enum": [
-                  "work",
-                  "home",
-                  "personal"
-                ]
-              },
-              "photo": {
-                "type": "string",
-                "format": "binary"
-              }
-            }
+          "name": {
+            "type": "string",
+            "example": "John Doe"
           },
-          "UpdateContactInput": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "isFavourite": {
-                "type": "boolean"
-              },
-              "contactType": {
-                "type": "string",
-                "enum": [
-                  "work",
-                  "home",
-                  "personal"
-                ]
-              },
-              "photo": {
-                "type": "string",
-                "format": "binary"
-              }
-            }
+          "phoneNumber": {
+            "type": "string",
+            "example": 380764567373
+          },
+          "email": {
+            "type": "string",
+            "example": "john_doe@mail.com"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "example": true
+          },
+          "contactType": {
+            "type": "string",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ]
+          },
+          "userId": {
+            "type": "string",
+            "example": "65e4decdd286b30065d54af9"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
           }
         }
       }
