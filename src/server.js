@@ -11,7 +11,7 @@ import authRouter from './routers/auth.js';
 
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
-import { swaggerDocs } from './middlewares/swaggerDocs';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 export function setupServer() {
   const app = express();
