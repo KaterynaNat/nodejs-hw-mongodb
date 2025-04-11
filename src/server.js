@@ -5,22 +5,19 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
-import fs from 'fs';
-import yaml from 'yaml';
 
 import contactsRouter from './routers/contacts.js';
 import authRouter from './routers/auth.js';
 
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
+import { swaggerDocs } from './middlewares/swaggerDocs';
 
 export function setupServer() {
   const app = express();
   const PORT = process.env.PORT || 3000;
 
   // Swagger
-  const swaggerFile = fs.readFileSync('./docs/openapi.yaml', 'utf8');
-  const swaggerDocs = yaml.parse(swaggerFile);
   app.use('/api-docs', swaggerDocs());
 
   // Middlewares
@@ -39,6 +36,6 @@ export function setupServer() {
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-    console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+    console.log(`Swagger docs available at http://127.0.0.1:${PORT}/api-docs`);
   });
 }
