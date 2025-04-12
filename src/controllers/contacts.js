@@ -9,7 +9,7 @@ export const getAllContacts = async (req, res) => {
     perPage = 10,
     sortBy = 'name',
     sortOrder = 'asc',
-    type,
+    contactType,
     isFavorite,
   } = req.query;
 
@@ -17,7 +17,7 @@ export const getAllContacts = async (req, res) => {
   const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
 
   const filter = { userId: req.user._id };
-  if (type) filter.contactType = type;
+  if (contactType) filter.contactType = contactType;
   if (isFavorite !== undefined) filter.isFavorite = isFavorite === 'true';
 
   const totalItems = await contactService.countContacts(filter);
