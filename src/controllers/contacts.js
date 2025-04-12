@@ -2,6 +2,7 @@ import createError from 'http-errors';
 import * as contactService from '../services/contacts.js';
 import cloudinary from '../utils/cloudinary.js';
 import { Readable } from 'stream';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getAllContacts = async (req, res) => {
   const {
@@ -9,16 +10,16 @@ export const getAllContacts = async (req, res) => {
     perPage = 10,
     sortBy = 'name',
     sortOrder = 'asc',
-    contactType,
-    isFavorite,
   } = req.query;
 
   const skip = (page - 1) * perPage;
   const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
 
+  const { contactType, isFavorite } = parseFilterParams(req.query);
+
   const filter = { userId: req.user._id };
   if (contactType) filter.contactType = contactType;
-  if (isFavorite !== undefined) filter.isFavorite = isFavorite === 'true';
+  if (typeof isFavorite === 'boolean') filter.isFavorite = isFavorite;
 
   const totalItems = await contactService.countContacts(filter);
   const contacts = await contactService.getFilteredContacts(

@@ -17,6 +17,13 @@ export function setupServer() {
   const app = express();
   const PORT = process.env.PORT || 3000;
 
+  app.use(
+    cors({
+      origin: ['http://127.0.0.1:3000'],
+      credentials: true,
+    }),
+  );
+
   // Swagger
   app.use('/api-docs', swaggerDocs());
 
