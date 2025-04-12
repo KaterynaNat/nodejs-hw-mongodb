@@ -18,7 +18,7 @@ properties:
   email:
     type: string
     example: john_doe@mail.com
-  isFavourite:
+  isFavorite:
     type: boolean
     example: true
   contactType:

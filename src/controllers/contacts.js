@@ -10,7 +10,7 @@ export const getAllContacts = async (req, res) => {
     sortBy = 'name',
     sortOrder = 'asc',
     type,
-    isFavourite,
+    isFavorite,
   } = req.query;
 
   const skip = (page - 1) * perPage;
@@ -18,7 +18,7 @@ export const getAllContacts = async (req, res) => {
 
   const filter = { userId: req.user._id };
   if (type) filter.contactType = type;
-  if (isFavourite !== undefined) filter.isFavorite = isFavourite === 'true';
+  if (isFavorite !== undefined) filter.isFavorite = isFavorite === 'true';
 
   const totalItems = await contactService.countContacts(filter);
   const contacts = await contactService.getFilteredContacts(

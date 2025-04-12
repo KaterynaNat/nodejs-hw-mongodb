@@ -36,12 +36,12 @@ parameters:
       example: 'personal'
       description: filter by contactType value
   - in: query
-    name: isFavourite
+    name: isFavorite
     schema:
       type: string
       enum: ['true', 'false']
       example: 'true'
-      description: filter favourite contacts
+      description: filter favorite contacts
 responses:
   '200':
     description: 'Get all contacts'
