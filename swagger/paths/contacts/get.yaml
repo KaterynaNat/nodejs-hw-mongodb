@@ -15,33 +15,31 @@ parameters:
     name: perPage
     schema:
       type: integer
-      example: 10
+    example: 10
   - in: query
     name: sortBy
     schema:
       type: string
-      example: 'contactType'
       description: '_id, name, contactType, createdAt fields can be mentioned. Default value - _id'
+      enum: ['_id', 'name', 'contactType', 'createdAt']
+      default: _id
   - in: query
     name: sortOrder
     schema:
       type: string
       enum: ['asc', 'desc']
-      example: 'asc'
+      default: asc
   - in: query
     name: contactType
     schema:
       type: string
       enum: ['work', 'home', 'personal']
-      example: 'personal'
-      description: filter by contactType value
+    description: filter by contactType value
   - in: query
     name: isFavorite
     schema:
-      type: string
-      enum: ['true', 'false']
-      example: 'true'
-      description: filter favorite contacts
+      type: boolean
+    description: filter favorite contacts
 responses:
   '200':
     description: 'Get all contacts'
