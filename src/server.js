@@ -19,19 +19,17 @@ export function setupServer() {
 
   app.use(
     cors({
-      origin: ['http://127.0.0.1:3000'],
+      origin: ['http://127.0.0.1:3000', 'https://swagger-orjw.onrender.com'],
       credentials: true,
     }),
   );
 
-  // Swagger
-  app.use('/api-docs', swaggerDocs());
-
-  // Middlewares
-  app.use(cors());
   app.use(express.json());
   app.use(cookieParser());
   app.use(pino());
+
+  // Swagger
+  app.use('/api-docs', swaggerDocs());
 
   // Routes
   app.use('/auth', authRouter);
