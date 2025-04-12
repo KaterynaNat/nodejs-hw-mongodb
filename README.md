@@ -18,5 +18,5 @@ npm run preview-docs
 
 Ви можете використовувати наступний тестовий акаунт для авторизації в Swagger:
 
-**Email**: kate.naturkach@gmail.com  
+**Email**: kate_naturkach@gmail.com  
 **Password**: qwerty123
