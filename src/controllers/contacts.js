@@ -3,23 +3,21 @@ import * as contactService from '../services/contacts.js';
 import cloudinary from '../utils/cloudinary.js';
 import { Readable } from 'stream';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
 
 export const getAllContacts = async (req, res) => {
-  const {
-    page = 1,
-    perPage = 10,
-    sortBy = 'name',
-    sortOrder = 'asc',
-  } = req.query;
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filterParsed = parseFilterParams(req.query);
+
+  const filter = {
+    userId: req.user._id,
+    ...filterParsed,
+  };
 
   const skip = (page - 1) * perPage;
   const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
-
-  const { contactType, isFavorite } = parseFilterParams(req.query);
-
-  const filter = { userId: req.user._id };
-  if (contactType) filter.contactType = contactType;
-  if (typeof isFavorite === 'boolean') filter.isFavorite = isFavorite;
 
   const totalItems = await contactService.countContacts(filter);
   const contacts = await contactService.getFilteredContacts(
@@ -35,12 +33,12 @@ export const getAllContacts = async (req, res) => {
     message: 'Successfully found contacts!',
     data: {
       data: contacts,
-      page: Number(page),
-      perPage: Number(perPage),
+      page,
+      perPage,
       totalItems,
       totalPages,
-      hasPreviousPage: Number(page) > 1,
-      hasNextPage: Number(page) < totalPages,
+      hasPreviousPage: page > 1,
+      hasNextPage: page < totalPages,
     },
   });
 };
