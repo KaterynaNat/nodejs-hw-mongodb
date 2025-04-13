@@ -5,41 +5,26 @@ import { Readable } from 'stream';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import { getFilteredContacts } from '../services/contacts.js';
 
 export const getAllContacts = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
-  const filterParsed = parseFilterParams(req.query);
+  const filter = parseFilterParams(req.query);
 
-  const filter = {
-    userId: req.user._id,
-    ...filterParsed,
-  };
-
-  const skip = (page - 1) * perPage;
-  const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
-
-  const totalItems = await contactService.countContacts(filter);
-  const contacts = await contactService.getFilteredContacts(
-    filter,
-    skip,
+  const contacts = await getFilteredContacts({
+    page,
     perPage,
-    sort,
-  );
-  const totalPages = Math.ceil(totalItems / perPage);
+    sortBy,
+    sortOrder,
+    filter,
+    userId: req.user.id,
+  });
 
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
-    data: {
-      data: contacts,
-      page,
-      perPage,
-      totalItems,
-      totalPages,
-      hasPreviousPage: page > 1,
-      hasNextPage: page < totalPages,
-    },
+    data: contacts,
   });
 };
 
