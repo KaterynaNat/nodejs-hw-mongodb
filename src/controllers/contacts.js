@@ -1,44 +1,30 @@
 import createError from 'http-errors';
 import * as contactService from '../services/contacts.js';
+import cloudinary from '../utils/cloudinary.js';
+import { Readable } from 'stream';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { getFilteredContacts } from '../services/contacts.js';
 
 export const getAllContacts = async (req, res) => {
-  const {
-    page = 1,
-    perPage = 10,
-    sortBy = 'name',
-    sortOrder = 'asc',
-    type,
-    isFavourite,
-  } = req.query;
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
 
-  const skip = (page - 1) * perPage;
-  const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
-
-  const filter = { userId: req.user._id };
-  if (type) filter.contactType = type;
-  if (isFavourite !== undefined) filter.isFavorite = isFavourite === 'true';
-
-  const totalItems = await contactService.countContacts(filter);
-  const contacts = await contactService.getFilteredContacts(
-    filter,
-    skip,
+  const contacts = await getFilteredContacts({
+    page,
     perPage,
-    sort,
-  );
-  const totalPages = Math.ceil(totalItems / perPage);
+    sortBy,
+    sortOrder,
+    filter,
+    userId: req.user.id,
+  });
 
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
-    data: {
-      data: contacts,
-      page: Number(page),
-      perPage: Number(perPage),
-      totalItems,
-      totalPages,
-      hasPreviousPage: Number(page) > 1,
-      hasNextPage: Number(page) < totalPages,
-    },
+    data: contacts,
   });
 };
 
@@ -57,10 +43,33 @@ export const getContactById = async (req, res) => {
   });
 };
 
+function bufferToStream(buffer) {
+  const readable = new Readable();
+  readable.push(buffer);
+  readable.push(null);
+  return readable;
+}
+
 export const addContact = async (req, res) => {
+  let photoUrl;
+  if (req.file) {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'contacts' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+      bufferToStream(req.file.buffer).pipe(uploadStream);
+    });
+    photoUrl = result.secure_url;
+  }
+
   const newContact = await contactService.addContact({
     ...req.body,
     userId: req.user._id,
+    photo: photoUrl,
   });
 
   res.status(201).json({
@@ -72,10 +81,34 @@ export const addContact = async (req, res) => {
 
 export const updateContact = async (req, res) => {
   const { contactId } = req.params;
+
+  let photoUrl;
+  if (req.file) {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'contacts' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+      bufferToStream(req.file.buffer).pipe(uploadStream);
+    });
+    photoUrl = result.secure_url;
+  }
+
+  const updateData = {
+    ...req.body,
+  };
+
+  if (photoUrl) {
+    updateData.photo = photoUrl;
+  }
+
   const updatedContact = await contactService.updateContact(
     contactId,
     req.user._id,
-    req.body,
+    updateData,
   );
 
   if (!updatedContact) {

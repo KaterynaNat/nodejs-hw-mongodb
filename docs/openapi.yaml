@@ -1,0 +1,51 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Contact App
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: Documentation for a contacts app
+
+tags:
+  - name: Contacts
+    description: Operations about contacts.
+  - name: Auth
+    description: User authentication
+
+servers:
+  - url: https://swagger-orjw.onrender.com
+  - url: http://127.0.0.1:3000
+
+paths:
+  /contacts:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
+  /contacts/{contactId}:
+    get:
+      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
+    patch:
+      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
+  /auth/login:
+    post:
+      $ref: ../swagger/paths/auth/login.yaml
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  # schemas:
+  #   Contact:
+  #     $ref: ../swagger/components/schemas/contact.yaml
+  # responses:
+  #   UnauthorizedError:
+  #     $ref: ../swagger/components/responses/401.yaml
+  #   NotFoundError:
+  #     $ref: ../swagger/components/responses/404.yaml
+  #   ServerError:
+  #     $ref: ../swagger/components/responses/500.yaml
